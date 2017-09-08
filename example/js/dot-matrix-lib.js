@@ -14,16 +14,7 @@ function getStringsWidth(canvas, arrayStrings, fontSize){
 	var ctx			= canvas.getContext("2d");
 	ctx.font		= (typeof fontSize === 'number') ? fontSize + "px Arial" : "10px Arial";
 
-	if (!Array.isArray(arrayStrings)) {
-		for (var i = 1; i <= data.series.data.length; i++){
-			var seriesData = data.series.data[i - 1];
-
-			var cWidth = ctx.measureText(seriesData.text).width;
-			if (cWidth > maxWidth) {
-				maxWidth = cWidth;
-			}
-		}
-	} else {
+	if (Array.isArray(arrayStrings)) {
 		arrayStrings.forEach(function(str, index){
 			var cWidth = ctx.measureText(str).width;
 			if (cWidth > maxWidth) {
@@ -103,8 +94,13 @@ function drawGraph(id, data, customWidth, customHeight){
 	drawCircle(canvas, legendXOffset + legendWidth + 60, 8, 4, "#FF0000", true);
 	drawText(canvas, data.series.categories[1], legendXOffset + legendWidth + 75, 17, 12);
 
+	var yLabels = [];
+	data.series.data.forEach(function(item, index){
+		yLabels.push(item.text);
+	})
+
 	yOffset = customHeight * 0.8;
-	xOffset = 10 + getStringsWidth(canvas);
+	xOffset = 10 + getStringsWidth(canvas, yLabels, 12);
 
 	yTicks = data.series.data.length;
 	yTickSpacing = ((yOffset - legendHeight) / (yTicks + 1));
