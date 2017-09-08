@@ -76,7 +76,7 @@ for (var k = 1; k <= ticksCount; k++) {
 
 	data.series.data.forEach(function(data, index){
 		for (var l = 1; l <= ticksCount; l++) {
-			data.values.push(getRandomNumber(5) > 2 ? true : false);
+			data.values.push(getRandomNumber(5) > 0 ? true : false);
 		}
 	});
 }

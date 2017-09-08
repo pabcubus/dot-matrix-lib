@@ -7,10 +7,10 @@ var yTickSpacing;
 var xTicks;
 var xTickSpacing;
 
-function getStringsWidth(canvas, arrayStrings){
-	var maxWidth = 0;
-	var ctx	= canvas.getContext("2d");
-	ctx.font="10px Arial";
+function getStringsWidth(canvas, arrayStrings, fontSize){
+	var maxWidth	= 0;
+	var ctx			= canvas.getContext("2d");
+	ctx.font		= (typeof fontSize === 'number') ? fontSize + "px Arial" : "10px Arial";
 
 	if (!Array.isArray(arrayStrings)) {
 		for (var i = 1; i <= data.series.data.length; i++){
@@ -31,6 +31,11 @@ function getStringsWidth(canvas, arrayStrings){
 	}
 
 	return maxWidth;
+}
+
+function drawRect(canvas, x, y, width, height){
+	var ctx	= canvas.getContext("2d");
+	ctx.strokeRect(x, y, width, height);
 }
 
 function drawCircle(canvas, x, y, r, colorString, ellipseModeCentered) {
@@ -70,29 +75,31 @@ function rotate(canvas, rotation){
 }
 
 function drawGraph(id, data, customWidth, customHeight){
+	// We get the wrapper
 	var wrapper = document.getElementById(id);
 
+	// We get the height and width which we want to work with
 	var customWidth		= Number.isInteger(customWidth) 	? customWidth 	: wrapper.clientWidth;
 	var customHeight	= Number.isInteger(customHeight) 	? customHeight 	: wrapper.clientHeight;
 
+	// We create the new canvas and the append it inside the wrapper
 	var newCanvas = document.createElement('canvas');
 	newCanvas.setAttribute('width', customWidth);
 	newCanvas.setAttribute('height', customHeight);
 	newCanvas.setAttribute('id', 'canvas');
 	wrapper.appendChild(newCanvas);
 
+	// We select the previously created Canvas
 	var canvas	= document.getElementById("canvas");
 
 	var legendHeight = 25;
 	var legendXOffset = customWidth * 0.3;
-	var legendWidth = getStringsWidth(canvas);
+	var legendWidth = getStringsWidth(canvas, data.series.categories, 12);
 
-	drawCircle(canvas, legendXOffset, 10, 4, "#009700");
-	drawCircle(canvas, legendXOffset + 60, 10, 4, "#FF0000");
-
-	drawText(canvas, 'Active', legendXOffset + 10, 15, 12);
-	drawText(canvas, 'Inactive', legendXOffset + 70, 15, 12);
-
+	drawCircle(canvas, legendXOffset, 8, 4, "#009700", true);
+	drawText(canvas, data.series.categories[0], legendXOffset + 15, 17, 12);
+	drawCircle(canvas, legendXOffset + legendWidth + 60, 8, 4, "#FF0000", true);
+	drawText(canvas, data.series.categories[1], legendXOffset + legendWidth + 75, 17, 12);
 
 	yOffset = customHeight * 0.8;
 	xOffset = 10 + getStringsWidth(canvas);
@@ -129,14 +136,13 @@ function drawGraph(id, data, customWidth, customHeight){
 		for (var j = 0; j < xTicks; j++){
 			var dataValue = seriesData.values[j];
 
-			drawCircle(canvas, xOffset + ((j+1) * xTickSpacing), newY, 4, (dataValue ? "#FF0000" : "#009700"));
+			drawCircle(canvas, xOffset + ((j+1) * xTickSpacing), newY, 4, (dataValue ? "#009700" : "#FF0000"));
 		}
 	}
 
 	rotate(canvas, Math.PI/2);
 	for (i = 1; i <= xTicks; i++){
 		var seriesData = data.series.x[i - 1];
-		//text(data.series.x[i - 1], (yOffset + 10), (-1 * ((i * xTickSpacing) + xOffset)));
 
 		drawText(canvas, seriesData, (yOffset + 10), (-1 * ((i * xTickSpacing) + xOffset)), 10);
 	}
