@@ -1,4 +1,5 @@
 // dot-matrix-lib
+var canvasId = 'dot-matrix-canvas';
 
 var yPoint;
 var xPoint;
@@ -68,6 +69,7 @@ function rotate(canvas, rotation){
 }
 
 function drawGraph(id, data, customWidth, customHeight){
+
 	// We get the wrapper
 	var wrapper = document.getElementById(id);
 
@@ -75,15 +77,20 @@ function drawGraph(id, data, customWidth, customHeight){
 	var customWidth		= Number.isInteger(customWidth) 	? customWidth 	: wrapper.clientWidth;
 	var customHeight	= Number.isInteger(customHeight) 	? customHeight 	: wrapper.clientHeight;
 
+	var canvas	= document.getElementById(canvasId);
+	if (canvas) {
+		wrapper.removeChild(canvas);
+	}
+
 	// We create the new canvas and the append it inside the wrapper
 	var newCanvas = document.createElement('canvas');
 	newCanvas.setAttribute('width', customWidth);
 	newCanvas.setAttribute('height', customHeight);
-	newCanvas.setAttribute('id', 'canvas');
+	newCanvas.setAttribute('id', canvasId);
 	wrapper.appendChild(newCanvas);
 
 	// We select the previously created Canvas
-	var canvas	= document.getElementById("canvas");
+	canvas	= document.getElementById(canvasId);
 
 	var legendHeight = 25;
 	var legendXOffset = customWidth * 0.3;
