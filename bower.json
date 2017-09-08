@@ -1,0 +1,17 @@
+{
+  "name": "dot-matrix-lib",
+  "homepage": "https://github.com/pabcubus/dot-matrix-lib",
+  "authors": [
+    "Pablo Bassil <pabcubus@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
