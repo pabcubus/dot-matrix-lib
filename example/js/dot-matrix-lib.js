@@ -1,3 +1,5 @@
+// dot-matrix-lib
+
 var yPoint;
 var xPoint;
 
