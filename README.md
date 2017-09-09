@@ -18,26 +18,6 @@ To use this library simply add it to the HTML:
 
 # Usage
 
-This library can be used also using **RequireJS**, like this:
-```javascript
-require.config({
-	paths: {
-		'dotMatrix':				'../bower_components/dot-matrix-lib/dist/dot-matrix-lib'
-	},
-
-	shim: {
-		'dotMatrix':				{ exports: 'dotMatrix' }
-	},
-
-	waitSeconds: 15,
-
-	deps: [
-		// kick start application... see bootstrap.js
-		'setup/appStarter'
-	]
-});
-```
-
 To use this library, you must create a container or DIV element with the desired ID, then the library will create a canvas inside that container. You must create it like this:
 
 ```html
@@ -76,6 +56,26 @@ drawGraph(id, data, customWidth, customHeight);
 
 drawGraph('dot-matrix-wrapper', data);
 
+```
+
+This library can be used also using **RequireJS**, like this:
+```javascript
+require.config({
+	paths: {
+		'dotMatrix':				'../bower_components/dot-matrix-lib/dist/dot-matrix-lib'
+	},
+
+	shim: {
+		'dotMatrix':				{ exports: 'dotMatrix' }
+	},
+
+	waitSeconds: 15,
+
+	deps: [
+		// kick start application... see bootstrap.js
+		'setup/appStarter'
+	]
+});
 ```
 
 # Author
