@@ -34,7 +34,7 @@ var data = {
 			'Not Active'
 		],
 		x: [], // here you put the X axis ticks
-		data: [ // Here you'll put the Y ticks as an object having "text" and "values" as properties. Also the values should be the same length as the X ticks
+		data: [ // Here you'll put the Y ticks as an object having "text" and "values" as properties. Also the values should be the same length as the X ticks. For the values it'll only accept booleans, so for example: values: [true,true,true,false,false].
 			{
 				text: "Item 1",
 				values: []
