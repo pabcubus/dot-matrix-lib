@@ -10,13 +10,33 @@ Download dot-matrix-lib using bower.
 bower install dot-matrix-lib --save
 ```
 
-To use this library then, simply the library:
+To use this library simply add it to the HTML:
 
 ``` html
 <script src="/path/to/lib/dot-matrix-lib.min.js"></script>
 ```
 
 # Usage
+
+This library can be used also using **RequireJS**, like this:
+```javascript
+require.config({
+	paths: {
+		'dotMatrix':				'../bower_components/dot-matrix-lib/dist/dot-matrix-lib'
+	},
+
+	shim: {
+		'dotMatrix':				{ exports: 'dotMatrix' }
+	},
+
+	waitSeconds: 15,
+
+	deps: [
+		// kick start application... see bootstrap.js
+		'setup/appStarter'
+	]
+});
+```
 
 To use this library, you must create a container or DIV element with the desired ID, then the library will create a canvas inside that container. You must create it like this:
 
