@@ -2,8 +2,6 @@
 
 **dot-matrix-lib** is an open-source JavaScript library for rendering Dot Matrix Charts using the HTML5 Canvas library.
 
-Check out an [Example](https://arpitnarechania.github.io/d3-dotmatrix/) where you can test various configuration options.
-
 # Installation
 
 Download dot-matrix-lib using bower.
