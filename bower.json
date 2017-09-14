@@ -6,6 +6,16 @@
   ],
   "description": "Open Source JavaScript Library for dot-matrix plotting purposes. This library was made using HTML5 Canvas and plain JavaScript.",
   "main": "",
+  "keywords": [
+    "dotmatrix",
+    "dot-matrix",
+    "javascript",
+    "html5",
+    "canvas",
+    "visualization",
+    "charts",
+    "open-source"
+  ],
   "license": "MIT",
   "ignore": [
     "**/.*",
