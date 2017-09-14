@@ -4,7 +4,7 @@
   "authors": [
     "Pablo Bassil <pabcubus@gmail.com>"
   ],
-  "description": "",
+  "description": "Open Source JavaScript Library for dot-matrix plotting purposes. This library was made using HTML5 Canvas and plain JavaScript.",
   "main": "",
   "license": "MIT",
   "ignore": [
