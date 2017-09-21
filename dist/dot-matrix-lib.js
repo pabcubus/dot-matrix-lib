@@ -73,9 +73,13 @@ function drawGraph(id, data, customWidth, customHeight){
 	// We get the wrapper
 	var wrapper = document.getElementById(id);
 
+	var style			= getComputedStyle(wrapper);
+	var paddingVert		= parseInt(style.paddingTop.replace('px',''))	+ parseInt(style.paddingBottom.replace('px',''));
+	var paddingHorz		= parseInt(style.paddingLeft.replace('px',''))	+ parseInt(style.paddingRight.replace('px',''));
+
 	// We get the height and width which we want to work with
-	var customWidth		= Number.isInteger(customWidth) 	? customWidth 	: wrapper.clientWidth;
-	var customHeight	= Number.isInteger(customHeight) 	? customHeight 	: wrapper.clientHeight;
+	var customWidth		= Number.isInteger(customWidth) 	? customWidth 	: wrapper.clientWidth - paddingVert;
+	var customHeight	= Number.isInteger(customHeight) 	? customHeight 	: wrapper.clientHeight - paddingHorz;
 
 	var canvas	= document.getElementById(canvasId);
 	if (canvas) {
