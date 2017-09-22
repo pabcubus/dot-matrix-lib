@@ -1,3 +1,4 @@
+/example/css/*.css
 /example/node_modules
 .DS_Store
 package-lock.json

@@ -13,7 +13,8 @@ bower install dot-matrix-lib --save
 To use this library simply add it to the HTML:
 
 ``` html
-<script src="/path/to/lib/dot-matrix-lib.min.js"></script>
+<link rel="stylesheet" href="/dist/css/dot-matrix-lib.min.css">
+<script src="/dist/js/dot-matrix-lib.min.js"></script>
 ```
 
 # Usage
@@ -77,6 +78,15 @@ require.config({
 	]
 });
 ```
+
+# Example
+
+In this repo there's an 'example' folder which you can go and watch an example of this library. Get to the folder then run:
+```sh
+$ npm install
+$ npm start
+```
+Then in your browser go to `http://localhost:3000/`.
 
 # Author
 

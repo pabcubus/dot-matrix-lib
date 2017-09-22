@@ -1,4 +1,7 @@
-// dot-matrix-lib
+/**
+ * @license Dot-Matrix-Lib v1.1.1
+ * Author: Pablo Bassil
+ */
 var canvasId = 'dot-matrix-canvas';
 
 var yPoint;
@@ -9,6 +12,65 @@ var yTickSpacing;
 
 var xTicks;
 var xTickSpacing;
+
+var points = [];
+var radius = 4;
+
+
+
+function init(id){
+	var popup;
+	var title;
+	var div1;
+	var div2;
+
+	popup = document.createElement('div');
+	popup.setAttribute('class', 'dot-popup');
+	popup.setAttribute('style', 'display: none;');
+
+	title = document.createElement('h4');
+	title.innerHTML = 'Data';
+
+	div1 = document.createElement('div');
+	div1.setAttribute('id', 'xValue');
+
+	div2 = document.createElement('div');
+	div2.setAttribute('id', 'yValue');
+
+	//popup.appendChild(title);
+	popup.appendChild(div1);
+	popup.appendChild(div2);
+
+	var wrapper = document.getElementById(id);
+	wrapper.appendChild(popup);
+}
+
+function mouseMoveEvent(event) {
+	var x			= event.clientX;
+	var y			= event.clientY;
+	var popup		= document.getElementsByClassName('dot-popup')[0];
+	var xValue		= document.getElementById('xValue');
+	var yValue		= document.getElementById('yValue');
+	var canToggle	= true;
+
+	points.forEach(function(item){
+		if (canToggle) {
+			if (item.x <= (x - (radius/2)) && (x - (radius/2)) <= (item.x + (radius * 2)) &&
+				item.y <= (y - (radius/2)) && (y - (radius/2)) <= (item.y + (radius * 2))) {
+
+				popup.setAttribute('style', 'display: block; top: '+(y+10)+'px; left:'+(x+10)+'px;');
+				xValue.innerHTML = item.xTitle;
+				yValue.innerHTML = item.yTitle;
+
+				canToggle = false;
+			} else {
+				popup.setAttribute('style', 'display: none;');
+			}
+		}
+	});
+
+	canToggle = true;
+}
 
 function getStringsWidth(canvas, arrayStrings, fontSize){
 	var maxWidth	= 0;
@@ -69,6 +131,7 @@ function rotate(canvas, rotation){
 }
 
 function drawGraph(id, data, customWidth, customHeight){
+	init(id);
 
 	// We get the wrapper
 	var wrapper = document.getElementById(id);
@@ -90,6 +153,7 @@ function drawGraph(id, data, customWidth, customHeight){
 	var newCanvas = document.createElement('canvas');
 	newCanvas.setAttribute('width', customWidth);
 	newCanvas.setAttribute('height', customHeight);
+	newCanvas.addEventListener('mousemove', mouseMoveEvent);
 	newCanvas.setAttribute('id', canvasId);
 	wrapper.appendChild(newCanvas);
 
@@ -145,7 +209,16 @@ function drawGraph(id, data, customWidth, customHeight){
 		for (var j = 0; j < xTicks; j++){
 			var dataValue = seriesData.values[j];
 
-			drawCircle(canvas, xOffset + ((j+1) * xTickSpacing), newY, 4, (dataValue ? "#009700" : "#FF0000"));
+			drawCircle(canvas, xOffset + ((j+1) * xTickSpacing), newY, radius, (dataValue ? "#009700" : "#FF0000"));
+
+			debugger;
+
+			points.push({
+				x: xOffset + ((j+1) * xTickSpacing),
+				y: newY,
+				xTitle: seriesData.values[j] == true ? data.series.categories[0] : data.series.categories[1],
+				yTitle: seriesData.text
+			});
 		}
 	}
 
