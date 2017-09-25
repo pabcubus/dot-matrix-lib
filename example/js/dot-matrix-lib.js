@@ -16,8 +16,6 @@ var xTickSpacing;
 var points = [];
 var radius = 4;
 
-
-
 function init(id){
 	var popup;
 	var title;
@@ -46,8 +44,8 @@ function init(id){
 }
 
 function mouseMoveEvent(event) {
-	var x			= event.clientX;
-	var y			= event.clientY;
+	var x			= event.offsetX;
+	var y			= event.offsetY;
 	var popup		= document.getElementsByClassName('dot-popup')[0];
 	var xValue		= document.getElementById('xValue');
 	var yValue		= document.getElementById('yValue');
@@ -58,7 +56,7 @@ function mouseMoveEvent(event) {
 			if (item.x <= (x - (radius/2)) && (x - (radius/2)) <= (item.x + (radius * 2)) &&
 				item.y <= (y - (radius/2)) && (y - (radius/2)) <= (item.y + (radius * 2))) {
 
-				popup.setAttribute('style', 'display: block; top: '+(y+10)+'px; left:'+(x+10)+'px;');
+				popup.setAttribute('style', 'display: block; top: ' + (event.clientY + 10) + 'px; left:' + (event.clientX + 10) + 'px;');
 				xValue.innerHTML = item.xTitle;
 				yValue.innerHTML = item.yTitle;
 
@@ -153,7 +151,7 @@ function drawGraph(id, data, customWidth, customHeight){
 	var newCanvas = document.createElement('canvas');
 	newCanvas.setAttribute('width', customWidth);
 	newCanvas.setAttribute('height', customHeight);
-	if (data.info_popup){
+	if (data.dot_popup == true || data.dot_popup == undefined || data.dot_popup == null){
 		newCanvas.addEventListener('mousemove', mouseMoveEvent);
 	}
 	newCanvas.setAttribute('id', canvasId);
@@ -214,8 +212,8 @@ function drawGraph(id, data, customWidth, customHeight){
 			drawCircle(canvas, xOffset + ((j+1) * xTickSpacing), newY, radius, (dataValue ? "#009700" : "#FF0000"));
 
 			points.push({
-				x: xOffset + ((j+1) * xTickSpacing),
-				y: newY,
+				x: xOffset + ((j+1) * xTickSpacing) - radius,
+				y: newY - radius,
 				xTitle: seriesData.values[j] == true ? data.series.categories[0] : data.series.categories[1],
 				yTitle: seriesData.text
 			});

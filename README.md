@@ -29,6 +29,7 @@ Setting chart parameters
 ```javascript
 
 var data = {
+	dot_popup: false, // This param is when you don't want the popup to show on each point.
 	series: {
 		categories: [ // The framework just accepts 2 types for now
 			'Active',
