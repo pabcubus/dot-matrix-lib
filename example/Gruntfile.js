@@ -70,17 +70,4 @@ module.exports = function(grunt) {
 		'uglify',
 		'concurrent:serve'
 	]);
-
-	/*
-	grunt.registerTask('serve_prod', [
-		'sass',
-		'cssmin',
-		'concurrent:serve_prod'
-	]);
-
-	grunt.registerTask('compile_sass', [
-		'sass',
-		'cssmin'
-	]);
-	*/
 };

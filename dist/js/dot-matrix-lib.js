@@ -209,13 +209,16 @@ function drawGraph(id, data, customWidth, customHeight){
 		for (var j = 0; j < xTicks; j++){
 			var dataValue = seriesData.values[j];
 
-			drawCircle(canvas, xOffset + ((j+1) * xTickSpacing), newY, radius, (dataValue ? "#009700" : "#FF0000"));
+			var x = xOffset + ((j+1) * xTickSpacing);
+			var y = newY;
+			var r = radius;
+			drawCircle(canvas, x, y, r, (dataValue ? "#009700" : "#FF0000"));
 
 			points.push({
-				x: xOffset + ((j+1) * xTickSpacing) - radius,
-				y: newY - radius,
-				xTitle: seriesData.values[j] == true ? data.series.categories[0] : data.series.categories[1],
-				yTitle: seriesData.text
+				'x': x - r,
+				'y': y - r,
+				'xTitle': seriesData.values[j] == true ? data.series.categories[0] : data.series.categories[1],
+				'yTitle': seriesData.text
 			});
 		}
 	}
