@@ -1,6 +1,7 @@
 var ticksCount = 75;
 
 var data = {
+	info_popup: false,
 	series: {
 		categories: [
 			'Active',

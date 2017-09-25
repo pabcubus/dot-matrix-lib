@@ -153,7 +153,9 @@ function drawGraph(id, data, customWidth, customHeight){
 	var newCanvas = document.createElement('canvas');
 	newCanvas.setAttribute('width', customWidth);
 	newCanvas.setAttribute('height', customHeight);
-	newCanvas.addEventListener('mousemove', mouseMoveEvent);
+	if (data.info_popup){
+		newCanvas.addEventListener('mousemove', mouseMoveEvent);
+	}
 	newCanvas.setAttribute('id', canvasId);
 	wrapper.appendChild(newCanvas);
 
@@ -210,8 +212,6 @@ function drawGraph(id, data, customWidth, customHeight){
 			var dataValue = seriesData.values[j];
 
 			drawCircle(canvas, xOffset + ((j+1) * xTickSpacing), newY, radius, (dataValue ? "#009700" : "#FF0000"));
-
-			debugger;
 
 			points.push({
 				x: xOffset + ((j+1) * xTickSpacing),
