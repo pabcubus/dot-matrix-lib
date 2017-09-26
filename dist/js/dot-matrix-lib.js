@@ -40,6 +40,7 @@ function init(id){
 	popup.appendChild(div2);
 
 	var wrapper = document.getElementById(id);
+	wrapper.setAttribute('style', 'position: relative;');
 	wrapper.appendChild(popup);
 }
 
@@ -56,7 +57,7 @@ function mouseMoveEvent(event) {
 			if (item.x <= (x - (radius/2)) && (x - (radius/2)) <= (item.x + (radius * 2)) &&
 				item.y <= (y - (radius/2)) && (y - (radius/2)) <= (item.y + (radius * 2))) {
 
-				popup.setAttribute('style', 'display: block; top: ' + (event.clientY + 10) + 'px; left:' + (event.clientX + 10) + 'px;');
+				popup.setAttribute('style', 'display: block; top: ' + (event.offsetY + 10) + 'px; left:' + (event.offsetX + 10) + 'px;');
 				xValue.innerHTML = item.xTitle;
 				yValue.innerHTML = item.yTitle;
 
