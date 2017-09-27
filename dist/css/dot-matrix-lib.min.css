@@ -1,1 +1,1 @@
-.dot-popup{position:absolute;border:1px solid #000;background-color:#fff;padding:5px;font-family:Helvetica,Arial,Sans-Serif}.dot-popup h4{margin:0;padding:3px 0}.dot-popup div{font-size:12px}
+.dot-popup{position:absolute;background-color:#000;color:#fff;opacity:.8;border-radius:5px;padding:5px;font-family:Helvetica,Arial,Sans-Serif}.dot-popup h4{margin:0;padding:3px 0}.dot-popup div{font-size:12px;padding:3px}

@@ -1,11 +1,14 @@
 .dot-popup {
   position: absolute;
-  border: 1px solid black;
-  background-color: white;
+  background-color: #000;
+  color: white;
+  opacity: 0.8;
+  border-radius: 5px;
   padding: 5px;
-  font-family: Helvetica, Arial, Sans-Serif; }
+  font-family: Helvetica,Arial,Sans-Serif; }
   .dot-popup h4 {
     margin: 0;
     padding: 3px 0; }
   .dot-popup div {
-    font-size: 12px; }
+    font-size: 12px;
+    padding: 3px; }
