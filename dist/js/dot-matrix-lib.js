@@ -132,7 +132,10 @@ function rotate(canvas, rotation){
 }
 
 function drawGraph(id, data){
+
 	init(id);
+
+	points = [];
 
 	yTicks = data.series.data.length;
 	xTicks = data.series.x.length;
