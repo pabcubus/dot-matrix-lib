@@ -91,7 +91,7 @@ In this repo there's an 'example' folder which you can go and watch an example o
 $ npm install
 $ npm start
 ```
-Then in your browser go to `http://localhost:3000/`.
+Then in your browser go to `http://localhost:5000/`.
 
 # Author
 
