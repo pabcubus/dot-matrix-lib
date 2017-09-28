@@ -1,5 +1,5 @@
 /**
- * @license Dot-Matrix-Lib v1.1.1
+ * @license Dot-Matrix-Lib v1.1.3
  * Author: Pablo Bassil
  */
 var canvasId = 'dot-matrix-canvas';
@@ -15,6 +15,8 @@ var xTickSpacing;
 
 var points = [];
 var radius = 4;
+
+var thisFontSize = 10;
 
 function init(id){
 	var popup;
@@ -129,8 +131,11 @@ function rotate(canvas, rotation){
 	ctx.rotate(rotation);
 }
 
-function drawGraph(id, data, customWidth, customHeight){
+function drawGraph(id, data){
 	init(id);
+
+	yTicks = data.series.data.length;
+	xTicks = data.series.x.length;
 
 	// We get the wrapper
 	var wrapper = document.getElementById(id);
@@ -140,8 +145,17 @@ function drawGraph(id, data, customWidth, customHeight){
 	var paddingHorz		= parseInt(style.paddingLeft.replace('px',''))	+ parseInt(style.paddingRight.replace('px',''));
 
 	// We get the height and width which we want to work with
-	var customWidth		= Number.isInteger(customWidth) 	? customWidth 	: wrapper.clientWidth - paddingVert;
-	var customHeight	= Number.isInteger(customHeight) 	? customHeight 	: wrapper.clientHeight - paddingHorz;
+	var customWidth;
+	var customHeight;
+
+	customWidth			= Number.isInteger(data.size.width)	? data.size.width : wrapper.clientWidth - paddingVert;
+	if ((typeof data.size.height == 'string') && (data.size.height == 'auto')){
+		customHeight 	= (thisFontSize + 4) * yTicks;
+	} else if (typeof data.size.height == 'number'){
+		customHeight 	= data.size.height;
+	} else {
+		customHeight 	= wrapper.clientHeight - paddingHorz;
+	}
 
 	var canvas	= document.getElementById(canvasId);
 	if (canvas) {
@@ -178,10 +192,8 @@ function drawGraph(id, data, customWidth, customHeight){
 	yOffset = customHeight * 0.8;
 	xOffset = 10 + getStringsWidth(canvas, yLabels, 12);
 
-	yTicks = data.series.data.length;
 	yTickSpacing = ((yOffset - legendHeight) / (yTicks + 1));
 
-	xTicks = data.series.x.length;
 	xTickSpacing = (customWidth - xOffset) / (xTicks + 1);
 
 	// first we draw the axis
@@ -205,7 +217,7 @@ function drawGraph(id, data, customWidth, customHeight){
 		var newX = xOffset - 10;
 		var seriesData = data.series.data[i - 1];
 
-		drawText(canvas, seriesData.text, newX, newY, 10, 'right');
+		drawText(canvas, seriesData.text, newX, newY, thisFontSize, 'right');
 
 		for (var j = 0; j < xTicks; j++){
 			var dataValue = seriesData.values[j];
@@ -228,7 +240,7 @@ function drawGraph(id, data, customWidth, customHeight){
 	for (i = 1; i <= xTicks; i++){
 		var seriesData = data.series.x[i - 1];
 
-		drawText(canvas, seriesData, (yOffset + 10), (-1 * ((i * xTickSpacing) + xOffset)), 10);
+		drawText(canvas, seriesData, (yOffset + 10), (-1 * ((i * xTickSpacing) + xOffset)), thisFontSize);
 	}
 	rotate(canvas, 0);
 }

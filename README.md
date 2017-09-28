@@ -1,4 +1,4 @@
-# Dot-Matrix Library
+# Dot-Matrix Library v1.1.3
 
 **dot-matrix-lib** is an open-source JavaScript library for rendering Dot Matrix Charts using the HTML5 Canvas library.
 
@@ -29,6 +29,10 @@ Setting chart parameters
 ```javascript
 
 var data = {
+	size: { // optional
+		height: 'auto',  // 'auto' to auto adjust or a number to set the height
+		width: 'auto' // 'auto' to auto adjust or a number to set the width
+	},
 	dot_popup: false, // This param is when you don't want the popup to show on each point.
 	series: {
 		categories: [ // The framework just accepts 2 types for now
