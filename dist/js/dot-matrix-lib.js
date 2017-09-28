@@ -152,7 +152,7 @@ function drawGraph(id, data){
 	var customHeight;
 
 	if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'string') && (data.size.width == 'auto')){
-		customWidth 	= (thisFontSize + 4) * xTicks;
+		customWidth 	= (thisFontSize + 8) * xTicks;
 	} else if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'number')){
 		customWidth 	= data.size.width;
 	} else {
