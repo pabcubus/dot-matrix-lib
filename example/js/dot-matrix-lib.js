@@ -147,14 +147,21 @@ function drawGraph(id, data){
 	var paddingVert		= parseInt(style.paddingTop.replace('px',''))	+ parseInt(style.paddingBottom.replace('px',''));
 	var paddingHorz		= parseInt(style.paddingLeft.replace('px',''))	+ parseInt(style.paddingRight.replace('px',''));
 
-	// We get the height and width which we want to work with
+	// We get the height and width which we want to work with. We check for the size property on the data object
 	var customWidth;
 	var customHeight;
 
-	customWidth			= Number.isInteger(data.size.width)	? data.size.width : wrapper.clientWidth - paddingVert;
-	if ((typeof data.size.height == 'string') && (data.size.height == 'auto')){
+	if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'string') && (data.size.width == 'auto')){
+		customWidth 	= (thisFontSize + 4) * xTicks;
+	} else if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'number')){
+		customWidth 	= data.size.width;
+	} else {
+		customWidth 	= wrapper.clientWidth - paddingVert;
+	}
+
+	if ((typeof data.size !== 'undefined') && (typeof data.size.height == 'string') && (data.size.height == 'auto')){
 		customHeight 	= (thisFontSize + 4) * yTicks;
-	} else if (typeof data.size.height == 'number'){
+	} else if ((typeof data.size !== 'undefined') && (typeof data.size.height == 'number')){
 		customHeight 	= data.size.height;
 	} else {
 		customHeight 	= wrapper.clientHeight - paddingHorz;
