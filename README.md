@@ -14,7 +14,7 @@ To use this library simply add it to the HTML:
 
 ``` html
 <link rel="stylesheet" href="/dist/css/dot-matrix-lib.min.css">
-<script src="/dist/js/dot-matrix-lib.min.js"></script>
+<script src="/dist/js/dot-matrix-lib.js"></script>
 ```
 
 # Usage
