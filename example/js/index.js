@@ -1,7 +1,12 @@
-var ticksCount = 75;
+var xTicksCount = 150;
+var yTicksCount = 100;
+var date		= new Date();
 
 var data = {
 	//dot_popup: false,
+	size:{
+		height: 'auto'
+	},
 	series: {
 		categories: [
 			'Active',
@@ -12,75 +17,25 @@ var data = {
 			x: 'Time',
 			y: 'Mac Addresses'
 		},
-		data: [{
-				text: "fd04:bd3:80e8:3:215:8d00:7e:14ca",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:baea",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:bda6",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:c984",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:eb30",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:cfe8",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:bafb",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:cfb3",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:baea",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:bda6",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:c984",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:eb30",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:cfe8",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:bafb",
-				values: []
-			},
-			{
-				text: "fd04:bd3:80e8:3:215:8d00:83:cfb3",
-				values: []
-			}
+		data: [
 		]
 	}
 }
 
-for (var k = 1; k <= ticksCount; k++) {
-	data.series.x.push('Date ' + k);
+for (let i = 0; i < yTicksCount; i++) {
+	let newobj = {
+		text: 'fd0'+i+':bd'+i+':80e'+i+':3:215:8d0'+i+':7e:14c'+i+'',
+		values: []
+	};
+
+	data.series.data.push(newobj);
+}
+
+for (let k = 1; k <= xTicksCount; k++) {
+	data.series.x.push('Sample Date ' + k);
 
 	data.series.data.forEach(function(data, index){
-		for (var l = 1; l <= ticksCount; l++) {
+		for (var l = 1; l <= xTicksCount; l++) {
 			data.values.push(getRandomNumber(5) > 0 ? true : false);
 		}
 	});

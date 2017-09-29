@@ -49,14 +49,14 @@ module.exports = function(grunt) {
 			cssmin: {
 				files: ['**/*.css'],
 				tasks: ['cssmin']
-			},
+			}/*,
 			uglify: {
 				files: ['js/dot-matrix-lib.js'],
 				tasks: ['uglify']
-			}
+			}*/
 		},
 		concurrent: {
-			serve: ['shell:serve', 'watch:sass', 'watch:cssmin', 'watch:uglify']
+			serve: ['shell:serve', 'watch:sass', 'watch:cssmin'/*, 'watch:uglify'*/]
 		}
 	});
 
@@ -67,7 +67,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('serve', [
 		'sass',
 		'cssmin',
-		'uglify',
+		//'uglify',
 		'concurrent:serve'
 	]);
 };

@@ -167,7 +167,7 @@ function drawGraph(id, data){
 
 	var xLabels = [];
 	data.series.x.forEach(function(item, index){
-		xLabels.push(item.text);
+		xLabels.push(item);
 	})
 	var maxXLabelSize	= getStringsWidth(xLabels, thisFontSize);
 	var maxYLabelSize	= getStringsWidth(yLabels, thisFontSize);
@@ -181,8 +181,9 @@ function drawGraph(id, data){
 
 	// We get the height and width which we want to work with. We check for the size property on the data object
 	if ((typeof data.size !== 'undefined') && (typeof data.size.height == 'string') && (data.size.height == 'auto')){
-		yTickSpacing	= thisFontSize + 10;
-		customHeight 	= maxXLabelSize + (yTickSpacing * yTicks);
+		let tickSpacing		= thisFontSize + 10;
+		customHeight 	= legendHeight + maxXLabelSize + (tickSpacing * (yTicks + 1));
+		yTickSpacing	= (customHeight - yOffset - legendHeight) / (yTicks + 1);
 	} else if ((typeof data.size !== 'undefined') && (typeof data.size.height == 'number')){
 		customHeight 	= data.size.height;
 		yTickSpacing	= (customHeight - legendHeight - yOffset) / (yTicks + 1);
@@ -192,8 +193,9 @@ function drawGraph(id, data){
 	}
 
 	if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'string') && (data.size.width == 'auto')){
-		xTickSpacing	= thisFontSize + 10;
-		customWidth 	= maxYLabelSize + (xTickSpacing * xTicks);
+		let tickSpacing		= thisFontSize + 10;
+		customWidth 	= maxYLabelSize + (tickSpacing * (xTicks + 1));
+		xTickSpacing	= (customWidth - xOffset) / (xTicks + 1);
 	} else if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'number')){
 		customWidth 	= data.size.width;
 		xTickSpacing	= (customWidth - xOffset) / (xTicks + 1);
@@ -219,7 +221,6 @@ function drawGraph(id, data){
 	canvas	= document.getElementById(canvasId);
 
 	// We draw the legend on the top
-
 	var legendXOffset	= customWidth * 0.3;
 	var legendWidth		= getStringsWidth(data.series.categories, thisFontSize);
 	drawCircle(canvas, legendXOffset, 13, 4, "#009700");
