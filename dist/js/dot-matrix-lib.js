@@ -4,9 +4,6 @@
  */
 var canvasId = 'dot-matrix-canvas';
 
-var yPoint;
-var xPoint;
-
 var yTicks;
 var yTickSpacing;
 
@@ -16,13 +13,18 @@ var xTickSpacing;
 var points = [];
 var radius = 4;
 
-var thisFontSize = 10;
+var thisFontSize = 11;
+
+var tempCanvas;
 
 function init(id){
 	var popup;
 	var title;
 	var div1;
 	var div2;
+
+	tempCanvas = document.createElement('canvas');
+	tempCanvas.setAttribute('style', 'display: none;');
 
 	popup = document.createElement('div');
 	popup.setAttribute('class', 'dot-popup');
@@ -73,9 +75,9 @@ function mouseMoveEvent(event) {
 	canToggle = true;
 }
 
-function getStringsWidth(canvas, arrayStrings, fontSize){
+function getStringsWidth(arrayStrings, fontSize){
 	var maxWidth	= 0;
-	var ctx			= canvas.getContext("2d");
+	var ctx			= tempCanvas.getContext("2d");
 	ctx.font		= (typeof fontSize === 'number') ? fontSize + "px Arial" : "10px Arial";
 
 	if (Array.isArray(arrayStrings)) {
@@ -95,15 +97,9 @@ function drawRect(canvas, x, y, width, height){
 	ctx.strokeRect(x, y, width, height);
 }
 
-function drawCircle(canvas, x, y, r, colorString, ellipseModeCentered) {
+function drawCircle(canvas, x, y, r, colorString) {
 	var ctx = canvas.getContext("2d");
 	ctx.beginPath();
-
-	if (ellipseModeCentered) {
-		x += r;
-		y += r;
-	}
-
 	ctx.arc(x, y, r, 0, 2 * Math.PI);
 	ctx.fillStyle = (typeof colorString === 'string') ? colorString : "#FFFFFF";
 	ctx.fill();
@@ -146,8 +142,10 @@ function drawGraph(id, data){
 
 	points = [];
 
-	yTicks = data.series.data.length;
-	xTicks = data.series.x.length;
+	var legendHeight	= 25;
+
+	var customWidth;
+	var customHeight;
 
 	// We get the wrapper
 	var wrapper = document.getElementById(id);
@@ -161,25 +159,51 @@ function drawGraph(id, data){
 		wrapper.removeChild(canvas);
 	}
 
+	// We get the maximum Axis labels size
+	var yLabels = [];
+	data.series.data.forEach(function(item, index){
+		yLabels.push(item.text);
+	})
+
+	var xLabels = [];
+	data.series.x.forEach(function(item, index){
+		xLabels.push(item.text);
+	})
+	var maxXLabelSize	= getStringsWidth(xLabels, thisFontSize);
+	var maxYLabelSize	= getStringsWidth(yLabels, thisFontSize);
+
+	var xOffset			= maxYLabelSize + 40;
+	var yOffset			= maxXLabelSize + 40;
+
+	// We set the number of ticks for each of the axis
+	yTicks				= data.series.data.length;
+	xTicks				= data.series.x.length;
+
 	// We get the height and width which we want to work with. We check for the size property on the data object
-	var customWidth;
-	var customHeight;
-
-	if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'string') && (data.size.width == 'auto')){
-		customWidth 	= (thisFontSize + 8) * xTicks;
-	} else if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'number')){
-		customWidth 	= data.size.width;
-	} else {
-		customWidth 	= wrapper.clientWidth - paddingVert;
-	}
-
 	if ((typeof data.size !== 'undefined') && (typeof data.size.height == 'string') && (data.size.height == 'auto')){
-		customHeight 	= (thisFontSize + 4) * yTicks;
+		yTickSpacing	= thisFontSize + 10;
+		customHeight 	= maxXLabelSize + (yTickSpacing * yTicks);
 	} else if ((typeof data.size !== 'undefined') && (typeof data.size.height == 'number')){
 		customHeight 	= data.size.height;
+		yTickSpacing	= (customHeight - legendHeight - yOffset) / (yTicks + 1);
 	} else {
 		customHeight 	= wrapper.clientHeight - paddingHorz;
+		yTickSpacing	= (customHeight - legendHeight - yOffset) / (yTicks + 1);
 	}
+
+	if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'string') && (data.size.width == 'auto')){
+		xTickSpacing	= thisFontSize + 10;
+		customWidth 	= maxYLabelSize + (xTickSpacing * xTicks);
+	} else if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'number')){
+		customWidth 	= data.size.width;
+		xTickSpacing	= (customWidth - xOffset) / (xTicks + 1);
+	} else {
+		customWidth 	= wrapper.clientWidth - paddingVert;
+		xTickSpacing	= (customWidth - xOffset) / (xTicks + 1);
+	}
+
+	var xOrigin			= xOffset;
+	var yOrigin			= (customHeight - yOffset);
 
 	// We create the new canvas and the append it inside the wrapper
 	var newCanvas = document.createElement('canvas');
@@ -194,74 +218,60 @@ function drawGraph(id, data){
 	// We select the previously created Canvas
 	canvas	= document.getElementById(canvasId);
 
-	// We get the offset of X and Y axis
-	var yLabels = [];
-	data.series.data.forEach(function(item, index){
-		yLabels.push(item.text);
-	})
-
-	var xLabels = [];
-	data.series.x.forEach(function(item, index){
-		xLabels.push(item.text);
-	})
-	var yOffset = customHeight - getStringsWidth(canvas, xLabels, thisFontSize) - 40;
-	var xOffset = 10 + getStringsWidth(canvas, yLabels, 12);
-
-	var legendHeight	= 25;
-	var legendXOffset	= customWidth * 0.3;
-	var legendWidth		= getStringsWidth(canvas, data.series.categories, thisFontSize);
-
-	// We draw the X Axis title label
-	if (typeof data.series.labels !== 'undefined' && typeof data.series.labels.x == 'string') {
-		drawText(canvas, data.series.labels.x, customWidth - getStringsWidth(canvas, [data.series.labels.x], thisFontSize) - 10, customHeight - 20, thisFontSize);
-	} else {
-		drawText(canvas, 'X Axis', customWidth - getStringsWidth(canvas, ['X Axis'], thisFontSize) - 50, customHeight - 20, thisFontSize);
-	}
-
 	// We draw the legend on the top
-	drawCircle(canvas, legendXOffset, 8, 4, "#009700", true);
+
+	var legendXOffset	= customWidth * 0.3;
+	var legendWidth		= getStringsWidth(data.series.categories, thisFontSize);
+	drawCircle(canvas, legendXOffset, 13, 4, "#009700");
 	drawText(canvas, data.series.categories[0], legendXOffset + 15, 17, thisFontSize);
-	drawCircle(canvas, legendXOffset + legendWidth + 60, 8, 4, "#FF0000", true);
+	drawCircle(canvas, legendXOffset + legendWidth + 60, 13, 4, "#FF0000");
 	drawText(canvas, data.series.categories[1], legendXOffset + legendWidth + 75, 17, thisFontSize);
 
-	yTickSpacing = ((yOffset - legendHeight) / (yTicks + 1));
-	xTickSpacing = (customWidth - xOffset) / (xTicks + 1);
-
-	// first we draw the axis
+	// We draw the axis
 	// Y axis
-	drawLine(canvas, xOffset, legendHeight, xOffset, yOffset);
+	drawLine(canvas, xOffset, legendHeight, xOffset, yOrigin);
 	// X axis
-	drawLine(canvas, xOffset, yOffset, customWidth, yOffset);
+	drawLine(canvas, xOrigin, yOrigin, customWidth, yOrigin);
 
-	// placing the X Axis ticks
-	for (var i = 1; i <= xTicks; i++){
-		drawLine(canvas, (i * xTickSpacing) + xOffset, yOffset, (i * xTickSpacing) + xOffset, yOffset + 5);
+	// placing the X Axis ticks and labels
+	for (let i = 1; i <= xTicks; i++){
+		let newX = xOrigin + (i * xTickSpacing);
+		drawLine(canvas, newX, yOrigin, newX, yOrigin + 5);
+
+		push(canvas);
+		rotate(canvas, Math.PI/2);
+		newX = (newX - 3) * -1;
+		let newY = yOrigin + 8;
+		let seriesData = data.series.x[i - 1];
+		drawText(canvas, seriesData, newY, newX, thisFontSize, 'left');
+		pop(canvas);
 	}
 
-	// placing the Y Axis ticks
-	for (i = 1; i <= yTicks; i++){
-		var newY = yOffset - (i * yTickSpacing);
+	// placing the Y Axis ticks and labels
+	for (let i = 1; i <= yTicks; i++){
+		let newY = yOrigin - (i * yTickSpacing);
 		drawLine(canvas, xOffset, newY, xOffset - 5, newY);
+
+		newY = newY + 3;
+		let newX = xOffset - 8;
+		let seriesData = data.series.data[i - 1];
+		drawText(canvas, seriesData.text, newX, newY, thisFontSize, 'right');
 	}
 
-	for (i = 1; i <= yTicks; i++){
-		var newY = (yOffset - (i * yTickSpacing));
-		var newX = xOffset - 10;
-		var seriesData = data.series.data[i - 1];
+	// placing the dots
+	for (let i = 1; i <= yTicks; i++){
+		let y = yOrigin - (i * yTickSpacing);
 
-		drawText(canvas, seriesData.text, newX, newY, thisFontSize, 'right');
+		for (let j = 1; j <= xTicks; j++){
+			let seriesData = data.series.data[i - 1];
+			let dataValue = seriesData.values[j];
+			let x = xOrigin + (j * xTickSpacing);
 
-		for (var j = 0; j < xTicks; j++){
-			var dataValue = seriesData.values[j];
-
-			var x = xOffset + ((j+1) * xTickSpacing);
-			var y = newY;
-			var r = radius;
-			drawCircle(canvas, x, y, r, (dataValue ? "#009700" : "#FF0000"));
+			drawCircle(canvas, x, y, radius, (dataValue ? "#009700" : "#FF0000"));
 
 			points.push({
-				'x': x - r,
-				'y': y - r,
+				'x': x - radius,
+				'y': y - radius,
 				'xTitle': seriesData.values[j] == true ? data.series.categories[0] : data.series.categories[1],
 				'yTitle': seriesData.text
 			});
@@ -269,23 +279,14 @@ function drawGraph(id, data){
 	}
 
 	push(canvas);
-
-	// We rotate the canvas and also write the X axis labels
-	rotate(canvas, Math.PI/2);
-	for (i = 1; i <= xTicks; i++){
-		var seriesData = data.series.x[i - 1];
-
-		drawText(canvas, seriesData, (yOffset + 10), (-1 * ((i * xTickSpacing) + xOffset)), thisFontSize);
-	}
-	pop(canvas);
-
-	push(canvas);
 	rotate(canvas, Math.PI*3/2);
-	// While rotated, we draw the Y Axis title label
-	if (typeof data.series.labels !== 'undefined' && typeof data.series.labels.y == 'string') {
-		drawText(canvas, data.series.labels.y, ((getStringsWidth(canvas, [data.series.labels.y], thisFontSize) + 30) * -1), 20, thisFontSize);
-	} else {
-		drawText(canvas, 'Y Axis', ((getStringsWidth(canvas, ['Y Axis'], thisFontSize) + 30) * -1), 20, thisFontSize);
-	}
+
+	drawText(canvas, data.series.labels.y, (getStringsWidth([data.series.labels.y], thisFontSize) + 30) * -1, 15, thisFontSize, 'left');
 	pop(canvas);
+
+	if (typeof data.series.labels !== 'undefined' && typeof data.series.labels.x == 'string') {
+		drawText(canvas, data.series.labels.x, (customWidth - (getStringsWidth([data.series.labels.x], thisFontSize) + 30)), (customHeight - 10), thisFontSize);
+	} else {
+		drawText(canvas, 'X Axis', (customWidth - (getStringsWidth(['X Axis'], thisFontSize) + 30)), (customHeight - 10), thisFontSize);
+	}
 }
