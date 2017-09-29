@@ -131,8 +131,17 @@ function rotate(canvas, rotation){
 	ctx.rotate(rotation);
 }
 
-function drawGraph(id, data){
+function push(canvas) {
+	var ctx = canvas.getContext("2d");
+	ctx.save();
+}
 
+function pop(canvas) {
+	var ctx = canvas.getContext("2d");
+	ctx.restore();
+}
+
+function drawGraph(id, data){
 	init(id);
 
 	points = [];
@@ -146,6 +155,11 @@ function drawGraph(id, data){
 	var style			= getComputedStyle(wrapper);
 	var paddingVert		= parseInt(style.paddingTop.replace('px',''))	+ parseInt(style.paddingBottom.replace('px',''));
 	var paddingHorz		= parseInt(style.paddingLeft.replace('px',''))	+ parseInt(style.paddingRight.replace('px',''));
+
+	var canvas	= document.getElementById(canvasId);
+	if (canvas) {
+		wrapper.removeChild(canvas);
+	}
 
 	// We get the height and width which we want to work with. We check for the size property on the data object
 	var customWidth;
@@ -167,11 +181,6 @@ function drawGraph(id, data){
 		customHeight 	= wrapper.clientHeight - paddingHorz;
 	}
 
-	var canvas	= document.getElementById(canvasId);
-	if (canvas) {
-		wrapper.removeChild(canvas);
-	}
-
 	// We create the new canvas and the append it inside the wrapper
 	var newCanvas = document.createElement('canvas');
 	newCanvas.setAttribute('width', customWidth);
@@ -185,36 +194,49 @@ function drawGraph(id, data){
 	// We select the previously created Canvas
 	canvas	= document.getElementById(canvasId);
 
-	var legendHeight = 25;
-	var legendXOffset = customWidth * 0.3;
-	var legendWidth = getStringsWidth(canvas, data.series.categories, 12);
-
-	drawCircle(canvas, legendXOffset, 8, 4, "#009700", true);
-	drawText(canvas, data.series.categories[0], legendXOffset + 15, 17, 12);
-	drawCircle(canvas, legendXOffset + legendWidth + 60, 8, 4, "#FF0000", true);
-	drawText(canvas, data.series.categories[1], legendXOffset + legendWidth + 75, 17, 12);
-
+	// We get the offset of X and Y axis
 	var yLabels = [];
 	data.series.data.forEach(function(item, index){
 		yLabels.push(item.text);
 	})
 
-	yOffset = customHeight * 0.8;
-	xOffset = 10 + getStringsWidth(canvas, yLabels, 12);
+	var xLabels = [];
+	data.series.x.forEach(function(item, index){
+		xLabels.push(item.text);
+	})
+	var yOffset = customHeight - getStringsWidth(canvas, xLabels, thisFontSize) - 40;
+	var xOffset = 10 + getStringsWidth(canvas, yLabels, 12);
+
+	var legendHeight	= 25;
+	var legendXOffset	= customWidth * 0.3;
+	var legendWidth		= getStringsWidth(canvas, data.series.categories, thisFontSize);
+
+	// We draw the X Axis title label
+	if (typeof data.series.labels !== 'undefined' && typeof data.series.labels.x == 'string') {
+		drawText(canvas, data.series.labels.x, customWidth - getStringsWidth(canvas, [data.series.labels.x], thisFontSize) - 10, customHeight - 20, thisFontSize);
+	} else {
+		drawText(canvas, 'X Axis', customWidth - getStringsWidth(canvas, ['X Axis'], thisFontSize) - 50, customHeight - 20, thisFontSize);
+	}
+
+	// We draw the legend on the top
+	drawCircle(canvas, legendXOffset, 8, 4, "#009700", true);
+	drawText(canvas, data.series.categories[0], legendXOffset + 15, 17, thisFontSize);
+	drawCircle(canvas, legendXOffset + legendWidth + 60, 8, 4, "#FF0000", true);
+	drawText(canvas, data.series.categories[1], legendXOffset + legendWidth + 75, 17, thisFontSize);
 
 	yTickSpacing = ((yOffset - legendHeight) / (yTicks + 1));
-
 	xTickSpacing = (customWidth - xOffset) / (xTicks + 1);
 
 	// first we draw the axis
+	// Y axis
 	drawLine(canvas, xOffset, legendHeight, xOffset, yOffset);
+	// X axis
 	drawLine(canvas, xOffset, yOffset, customWidth, yOffset);
 
 	// placing the X Axis ticks
 	for (var i = 1; i <= xTicks; i++){
 		drawLine(canvas, (i * xTickSpacing) + xOffset, yOffset, (i * xTickSpacing) + xOffset, yOffset + 5);
 	}
-
 
 	// placing the Y Axis ticks
 	for (i = 1; i <= yTicks; i++){
@@ -246,11 +268,24 @@ function drawGraph(id, data){
 		}
 	}
 
+	push(canvas);
+
+	// We rotate the canvas and also write the X axis labels
 	rotate(canvas, Math.PI/2);
 	for (i = 1; i <= xTicks; i++){
 		var seriesData = data.series.x[i - 1];
 
 		drawText(canvas, seriesData, (yOffset + 10), (-1 * ((i * xTickSpacing) + xOffset)), thisFontSize);
 	}
-	rotate(canvas, 0);
+	pop(canvas);
+
+	push(canvas);
+	rotate(canvas, Math.PI*3/2);
+	// While rotated, we draw the Y Axis title label
+	if (typeof data.series.labels !== 'undefined' && typeof data.series.labels.y == 'string') {
+		drawText(canvas, data.series.labels.y, ((getStringsWidth(canvas, [data.series.labels.y], thisFontSize) + 30) * -1), 20, thisFontSize);
+	} else {
+		drawText(canvas, 'Y Axis', ((getStringsWidth(canvas, ['Y Axis'], thisFontSize) + 30) * -1), 20, thisFontSize);
+	}
+	pop(canvas);
 }

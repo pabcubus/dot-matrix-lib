@@ -8,6 +8,10 @@ var data = {
 			'Not Active'
 		],
 		x: [],
+		labels: {
+			x: 'Time',
+			y: 'Mac Addresses'
+		},
 		data: [{
 				text: "fd04:bd3:80e8:3:215:8d00:7e:14ca",
 				values: []
