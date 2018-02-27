@@ -1,4 +1,4 @@
-var xTicksCount = 150;
+var xTicksCount = 50;
 var yTicksCount = 100;
 var date		= new Date();
 
