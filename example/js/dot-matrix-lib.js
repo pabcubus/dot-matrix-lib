@@ -259,7 +259,7 @@ function drawGraph(id, data){
 		drawText(canvas, seriesData.text, newX, newY, thisFontSize, 'right');
 	}
 
-	// placing the dots
+	// placing the dots on the grid
 	for (let i = 1; i <= yTicks; i++){
 		let y = yOrigin - (i * yTickSpacing);
 
