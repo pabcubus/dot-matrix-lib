@@ -1,5 +1,5 @@
 /**
- * @license Dot-Matrix-Lib v1.1.3
+ * @license Dot-Matrix-Lib v1.1.4
  * Author: Pablo Bassil
  */
 var canvasId = 'dot-matrix-canvas';
