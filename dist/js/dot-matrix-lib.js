@@ -1,5 +1,5 @@
 /**
- * @license Dot-Matrix-Lib v1.1.3
+ * @license Dot-Matrix-Lib v1.1.4
  * Author: Pablo Bassil
  */
 var canvasId = 'dot-matrix-canvas';
@@ -181,7 +181,7 @@ function drawGraph(id, data){
 
 	// We get the height and width which we want to work with. We check for the size property on the data object
 	if ((typeof data.size !== 'undefined') && (typeof data.size.height == 'string') && (data.size.height == 'auto')){
-		let tickSpacing		= thisFontSize + 10;
+		let tickSpacing	= thisFontSize + 10;
 		customHeight 	= legendHeight + maxXLabelSize + (tickSpacing * (yTicks + 1));
 		yTickSpacing	= (customHeight - yOffset - legendHeight) / (yTicks + 1);
 	} else if ((typeof data.size !== 'undefined') && (typeof data.size.height == 'number')){
@@ -193,7 +193,7 @@ function drawGraph(id, data){
 	}
 
 	if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'string') && (data.size.width == 'auto')){
-		let tickSpacing		= thisFontSize + 10;
+		let tickSpacing	= thisFontSize + 10;
 		customWidth 	= maxYLabelSize + (tickSpacing * (xTicks + 1));
 		xTickSpacing	= (customWidth - xOffset) / (xTicks + 1);
 	} else if ((typeof data.size !== 'undefined') && (typeof data.size.width == 'number')){
@@ -259,13 +259,13 @@ function drawGraph(id, data){
 		drawText(canvas, seriesData.text, newX, newY, thisFontSize, 'right');
 	}
 
-	// placing the dots
+	// placing the dots on the grid
 	for (let i = 1; i <= yTicks; i++){
 		let y = yOrigin - (i * yTickSpacing);
 
 		for (let j = 1; j <= xTicks; j++){
 			let seriesData = data.series.data[i - 1];
-			let dataValue = seriesData.values[j];
+			let dataValue = seriesData.values[j - 1];
 			let x = xOrigin + (j * xTickSpacing);
 
 			drawCircle(canvas, x, y, radius, (dataValue ? "#009700" : "#FF0000"));
